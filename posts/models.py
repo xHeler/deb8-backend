@@ -8,7 +8,7 @@ class Post(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="posts")
-    image_url = models.URLField(max_length=500)
+    image = models.ImageField(upload_to='posts/images/')
     title = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
