@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     # Local
     'accounts.apps.AccountsConfig',
+    'posts.apps.PostsConfig',
 ]
 
 MIDDLEWARE = [
