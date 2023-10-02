@@ -18,7 +18,6 @@ pip3 install -r requirements.txt
 ```
 
 ## Running project
-
-### Run database
-
-### Run server
+```shell
+docker compose up -d --build
+``
