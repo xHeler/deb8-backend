@@ -20,4 +20,4 @@ pip3 install -r requirements.txt
 ## Running project
 ```shell
 docker compose up -d --build
-``
+```
