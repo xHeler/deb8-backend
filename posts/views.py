@@ -19,6 +19,18 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    page_param = openapi.Parameter(
+        'page', openapi.IN_QUERY, description="Page number for pagination", type=openapi.TYPE_INTEGER
+    )
+    
+    page_size_param = openapi.Parameter(
+        'page_size', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER
+    )
+
+    @swagger_auto_schema(manual_parameters=[page_param, page_size_param])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
