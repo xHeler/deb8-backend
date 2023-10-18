@@ -21,3 +21,11 @@ pip3 install -r requirements.txt
 ```shell
 docker compose up -d --build
 ```
+
+## Using Swagger
+
+You must login ang get token from endpoint `http://localhost:8000/api/auth/login/`
+
+Also you need to add this token into `Authorize` field in swagger on endpoint `http://localhost:8000/swagger/"` with key word. 
+
+Example: ```key a2de1cc7ca27c8e5a699d41d6d08739ea68e285f```
