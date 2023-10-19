@@ -31,9 +31,16 @@ class PostCreateSerializer(serializers.ModelSerializer):
 class PostReadSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='author.username')
     likes_count = serializers.SerializerMethodField()
+    isLiked = serializers.SerializerMethodField()
 
     def get_likes_count(self, obj):
         return Like.objects.filter(post=obj).count()
+
+    def get_isLiked(self, obj):
+        user = self.context['request'].user
+        is_liked = Like.objects.filter(author=user, post=obj).exists()
+        return is_liked
+
 
     class Meta:
         fields = (
@@ -44,5 +51,6 @@ class PostReadSerializer(serializers.ModelSerializer):
             "description",
             "created_at",
             "likes_count",
+            "isLiked",
         )
         model = Post
