@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
     'likes.apps.LikesConfig',
+    'comments.apps.CommentsConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from likes.models import Like
+from comments.models import Comment
+from comments.serializers import CommentSerializer
 from .models import Post
 
 
@@ -31,16 +33,24 @@ class PostCreateSerializer(serializers.ModelSerializer):
 class PostReadSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='author.username')
     likes_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
     isLiked = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
 
     def get_likes_count(self, obj):
         return Like.objects.filter(post=obj).count()
+    
+    def get_comments_count(self, obj):
+        return Comment.objects.filter(post=obj).count()
 
     def get_isLiked(self, obj):
         user = self.context['request'].user
         is_liked = Like.objects.filter(author=user, post=obj).exists()
         return is_liked
 
+    def get_comments(self, obj):
+        comments = Comment.objects.filter(post=obj)
+        return CommentSerializer(comments, many=True).data
 
     class Meta:
         fields = (
@@ -51,6 +61,8 @@ class PostReadSerializer(serializers.ModelSerializer):
             "description",
             "created_at",
             "likes_count",
+            "comments_count",
+            "comments",
             "isLiked",
         )
         model = Post

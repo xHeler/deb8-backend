@@ -39,6 +39,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/posts/', include('posts.urls')),
     path('api/likes/', include('likes.urls')),
+    path('api/comments/', include('comments.urls')),
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',

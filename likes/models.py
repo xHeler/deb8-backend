@@ -9,8 +9,9 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
 
+
     def __str__(self):
-        return f"User: {self.author.username} likes: Post: {self.post}"
+        return f"User: {self.author.username} likes: Post: {self.post.post_id}"
     
     class Meta:
         unique_together = ('post', 'author')
