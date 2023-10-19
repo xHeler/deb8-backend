@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
+from likes.models import Like
 from .models import Post
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostCreateSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='author.username')
 
     def create(self, validated_data):
@@ -23,5 +24,25 @@ class PostSerializer(serializers.ModelSerializer):
             "image",
             "description",
             "created_at",
+        )
+        model = Post
+
+
+class PostReadSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='author.username')
+    likes_count = serializers.SerializerMethodField()
+
+    def get_likes_count(self, obj):
+        return Like.objects.filter(post=obj).count()
+
+    class Meta:
+        fields = (
+            "post_id",
+            "username",
+            "title",
+            "image",
+            "description",
+            "created_at",
+            "likes_count",
         )
         model = Post

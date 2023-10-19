@@ -12,12 +12,12 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .models import Post
-from .serializers import PostSerializer
+from .serializers import PostCreateSerializer, PostReadSerializer
 
 
 class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostReadSerializer
 
     page_param = openapi.Parameter(
         'page', openapi.IN_QUERY, description="Page number for pagination", type=openapi.TYPE_INTEGER
@@ -34,7 +34,7 @@ class PostList(generics.ListCreateAPIView):
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostReadSerializer
 
 
 @authentication_classes([TokenAuthentication])
@@ -44,10 +44,10 @@ class PostCreateView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(request_body=PostSerializer, operation_description="Add a new post with an image",
+    @swagger_auto_schema(request_body=PostCreateSerializer, operation_description="Add a new post with an image",
                          manual_parameters=[openapi.Parameter('image', in_=openapi.IN_FORM, type=openapi.TYPE_FILE)])
     def post(self, request, *args, **kwargs):
-        post_serializer = PostSerializer(data=request.data)
+        post_serializer = PostCreateSerializer(data=request.data)
 
         if post_serializer.is_valid():
             post = post_serializer.save(author=request.user)

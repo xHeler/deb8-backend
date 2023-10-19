@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # Local
     'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
+    'likes.apps.LikesConfig',
 ]
 
 MIDDLEWARE = [
