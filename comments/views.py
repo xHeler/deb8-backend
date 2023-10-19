@@ -32,7 +32,6 @@ class CommentCreateView(APIView):
             return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 class CommentDeleteView(APIView):

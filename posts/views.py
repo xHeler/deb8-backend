@@ -54,3 +54,37 @@ class PostCreateView(APIView):
             return Response(post_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+class PostDeleteView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='post_id',
+                in_=openapi.IN_FORM,
+                description='UUID of the post to delete',
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+        ],
+        operation_description="Delete an existing post",
+    )
+    def delete(self, request, *args, **kwargs):
+        post_id = request.data.get('post_id')
+        
+        if not post_id:
+            return Response({"detail": "Post ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        post_instance = Post.objects.filter(post_id=post_id, author=request.user).first()
+        
+        if post_instance:
+            post_instance.delete()
+            return Response({"detail": "Post removed successfully."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "Post not found or you don't have permission to delete it."}, status=status.HTTP_404_NOT_FOUND)
