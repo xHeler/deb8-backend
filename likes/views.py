@@ -22,6 +22,10 @@ class LikeCreateView(APIView):
     
     @swagger_auto_schema(request_body=LikeCreateSerializer, operation_description="Add a new like",)
     def post(self, request, *args, **kwargs):
+        like_instance = Like.objects.filter(post=request.data.get('post'), author=request.user).first()
+        if like_instance:
+            return Response({"detail": "Like already exist."}, status=status.HTTP_400_BAD_REQUEST)
+        
         like_serializer = LikeCreateSerializer(data=request.data)
 
         if like_serializer.is_valid():
