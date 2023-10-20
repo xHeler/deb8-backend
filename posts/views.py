@@ -16,7 +16,7 @@ from .serializers import PostCreateSerializer, PostReadSerializer
 
 
 class PostList(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostReadSerializer
 
     page_param = openapi.Parameter(
