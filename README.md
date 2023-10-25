@@ -22,6 +22,11 @@ pip3 install -r requirements.txt
 docker compose up -d --build
 ```
 
+## Database migration (First run only!)
+```shell
+docker compose exec web python manage.py migrate
+```
+
 ## Using Swagger
 
 You must login ang get token from endpoint `http://localhost:8000/api/auth/login/`
