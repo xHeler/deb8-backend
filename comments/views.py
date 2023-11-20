@@ -1,4 +1,4 @@
-
+import threading
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +9,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from .gpt import analize_comment
 
 from .serializers import CommentCreateSerializer, CommentDeleteSerializer
 from .models import Comment
@@ -27,6 +28,8 @@ class CommentCreateView(APIView):
 
         if comment_serializer.is_valid():
             comment = comment_serializer.save(author=request.user)
+            threading.Thread(target=analize_comment, args=(comment.comment_id,)).start()
+
             return Response(comment_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
