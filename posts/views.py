@@ -1,3 +1,4 @@
+import threading
 from rest_framework import generics
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -50,10 +51,8 @@ class PostCreateView(APIView):
         post_serializer = PostCreateSerializer(data=request.data)
 
         if post_serializer.is_valid():
-            post = post_serializer.save(author=request.user)
-            description = send_image_to_openai(post.image.url)
-            post.description = description
-            post.save()
+            post = post_serializer.save(author=request.user, description="Generating by AI")
+            threading.Thread(target=send_image_to_openai, args=(post.post_id, post.image.url)).start()
             return Response(post_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
