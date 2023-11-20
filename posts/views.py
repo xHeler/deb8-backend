@@ -7,7 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import authentication_classes, permission_classes
 
-
+from .gpt import send_image_to_openai
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -51,6 +51,9 @@ class PostCreateView(APIView):
 
         if post_serializer.is_valid():
             post = post_serializer.save(author=request.user)
+            description = send_image_to_openai(post.image.url)
+            post.description = description
+            post.save()
             return Response(post_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
